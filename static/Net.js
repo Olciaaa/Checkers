@@ -73,4 +73,27 @@ class Net{
             },
         });
     }
+    parametersOfPawn(pawn)
+    {
+        var pionek;
+        //console.log(pawn);
+        $.ajax({
+            url: "/",
+            data: {action:"parameters",pawn:pawn},//JSON.stringify(pawn.position)},
+            type: "POST",
+            success: function (parameters) 
+            {
+                if(pionek != parameters)
+                {
+                    pionek = parameters;
+                    console.log(pionek);
+                }
+                
+                //game.enemyMove(JSON.parse(parameters));
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr);
+            },
+        });
+    }
 }

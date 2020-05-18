@@ -1,6 +1,6 @@
 class Game{
     constructor(){
-        console.log("game")
+        //console.log("game")
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(
             45,
@@ -25,11 +25,13 @@ class Game{
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.clickedBefore = 0;
         this.currentColor;
+        this.enemyy = false;
+        this.enemyMove();
     }
 
     makingBoard()
     {
-        console.log(this.board)
+        //console.log(this.board)
         //var scene = new THREE.Scene();
         let scene = this.scene;
         var axes = new THREE.AxesHelper(1000)
@@ -84,7 +86,7 @@ class Game{
             }
         }
         let renderer = this.renderer;
-        console.log(scene);
+        //console.log(scene);
         function render() 
         {
             requestAnimationFrame(render);
@@ -139,15 +141,6 @@ class Game{
         makingPawns(playerColor,0)
         makingPawns(enemyColor,(this.sizeOfBoard-2))
         this.movingPawn();
-        //let renderer = this.renderer;
-        //let scene = this.scene;
-        //let camera = this.camera;
-        //function render() 
-        //{
-           // requestAnimationFrame(render);
-           // renderer.render(scene, camera);
-        //}
-            //render();
     }
     movingPawn()
     {
@@ -156,39 +149,96 @@ class Game{
         var clickedElement;
         var camera = this.camera;
         var scene = this.scene;
-        console.log(scene);
+            //console.log(scene);
         var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
         var mouseVector = new THREE.Vector2() 
         $(document).mousedown( (event)=> {
-            mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
-            mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
-            raycaster.setFromCamera(mouseVector, camera);
-            var intersects = raycaster.intersectObjects(scene.children);
-            if (intersects.length >= 0) {
-                clickedElement = intersects[0].object;
-                //console.log(clickedElement)
-                let arr = clickedElement.material.map.image.src.split("/")
-                //console.log((arr[arr.length-1]).split(".")[0]);
-                //console.log(this.currentColor);
-                if(this.currentColor == (arr[arr.length-1]).split(".")[0])
-                {
-                    if(clickedElement.geometry.type == "CylinderGeometry")
+            if(this.currentColor == "white")
+            {
+                mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
+                mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
+                console.log(mouseVector)
+                console.log(event.clientX);
+                console.log(event.clientY);
+                raycaster.setFromCamera(mouseVector, camera);
+                var intersects = raycaster.intersectObjects(scene.children);
+                if (intersects.length >= 0) {
+                    clickedElement = intersects[0].object;
+                    //console.log(clickedElement)
+                    let arr = clickedElement.material.map.image.src.split("/")
+                    //console.log((arr[arr.length-1]).split(".")[0]);
+                    //console.log(this.currentColor);
+                    if(this.currentColor == (arr[arr.length-1]).split(".")[0])
                     {
-                         pawn.clicking(clickedElement,this.clickedBefore);
-                         this.clickedBefore = clickedElement;
-                         pawnn = clickedElement;
-                         click = true;
+                        if(clickedElement.geometry.type == "CylinderGeometry")
+                        {
+                             pawn.clicking(clickedElement,this.clickedBefore);
+                             this.clickedBefore = clickedElement;
+                             pawnn = clickedElement;
+                             console.log(pawnn.position.x / 100, pawnn.position.z/100)
+                             click = true;
+                        }
+                    }
+    
+                    if(click == true && clickedElement.geometry.type == "BoxGeometry" && (arr[arr.length-1]).split(".")[0] == "blackk")
+                    {
+                        //console.log("git")
+                        pawn.moving(clickedElement);
+                        pawn.clicking(pawnn,this.clickedBefore);
                     }
                 }
-
-                if(click == true && clickedElement.geometry.type == "BoxGeometry" && (arr[arr.length-1]).split(".")[0] == "blackk")
-                {
-                    console.log("git")
-                    pawn.moving(clickedElement);
-                    pawn.clicking(pawnn,this.clickedBefore);
-                }
             }
+
+                
+            
         })
-        
+    } 
+    enemyMove()
+    {
+        {
+            setInterval(() => {
+                if(this.currentColor != null)
+                {
+                    net.parametersOfPawn(this.currentColor);
+                }
+                
+            }, 1000);
+        }
+        //console.log(pawn);
+        //this.enemyy = true;
+        /*console.log(pawn.x / 100, pawn.z/100);
+        var clickedElement;
+        var camera = this.camera;
+        var scene = this.scene;
+        var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
+        var mouseVector = new THREE.Vector2() 
+
+            mouseVector.x = pawn.x / 100;
+            mouseVector.y = pawn.z/100;
+
+            raycaster.setFromCamera(mouseVector, camera);
+            var intersects = raycaster.intersectObjects(scene.children);
+            if (intersects.length >= 0) 
+            {
+                clickedElement = intersects[0].object;
+                console.log(clickedElement);    
+            }*/
     }
+    /*enemyGoes()
+    {
+        
+        setInterval(()=>
+        { 
+            console.log(this.currentColor)
+            console.log("działa");
+            console.log(this.enemyy);
+            
+            if(this.enemyy == true && this.currentColor == "black")
+            {
+                console.log("czarny");
+                this.enemyy = false;
+            } 
+        }, 1000);
+         
+    }*/
 }

@@ -5,6 +5,8 @@ var qs = require("querystring");
 var gracze = [];
 var color;
 
+var danePionka = [1];
+
 function servResponse(req, res) {
     var allData = "";
 
@@ -70,11 +72,28 @@ function servResponse(req, res) {
             gracze = [];
             res.end("Nie ma teraz żadnych graczy, możesz dołączyć do gry");
         }
+        else if(finish.action == "parameters")
+        {
+            var check = true;
+            
+            danePionka.forEach(element => {
+                if(element == finish.pawn)
+                {
+                    check = false;
+                }
+            });
+            if(check == true)
+            {
+                danePionka.push(finish.pawn);
+            }
+            //console.log(finish);
+            res.end(JSON.stringify(danePionka));
+        }
     })
 }
 
 var server = http.createServer(function (req, res) {
-    console.log(req.url)
+   // console.log(req.url)
     switch (req.method) {
         case "GET":
             if (req.url === "/") {
