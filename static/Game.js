@@ -148,16 +148,17 @@ class Game{
         var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
         var mouseVector = new THREE.Vector2() 
         $(document).mousedown( (event)=> {
+            if(this.currentColor == "white")
+            {
                 mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
                 mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
                 raycaster.setFromCamera(mouseVector, camera);
                 var intersects = raycaster.intersectObjects(scene.children);
                 if (intersects.length > 0) {
                     clickedElement = intersects[0].object;
-                    //console.log(clickedElement)
+
                     let arr = clickedElement.material.map.image.src.split("/")
-                    //console.log((arr[arr.length-1]).split(".")[0]);
-                    //console.log(this.currentColor);
+
                     if(this.currentColor == (arr[arr.length-1]).split(".")[0])
                     {
                         if(clickedElement.geometry.type == "CylinderGeometry")
@@ -165,9 +166,7 @@ class Game{
                              pawn.clicking(clickedElement,this.clickedBefore);
                              this.clickedBefore = clickedElement;
                              pawnn = clickedElement;
-                             //console.log(pawnn.position.x / 100, pawnn.position.z/100)
                              click = true;
-                             //console.log(clickedElement.position);
                         }
                     }
     
@@ -179,25 +178,25 @@ class Game{
                         pawn.moving(clickedElement);
                         pawn.clicking(pawnn,this.clickedBefore);
                     }
-                }     
+                }   
+            }  
         })
     } 
     checkingEnemyMove()
     {
+        setInterval(() => {
+        //console.log(this.currentColor)
+        if(this.currentColor == "black")
         {
-            setInterval(() => {
-                if(this.currentColor != null)
-                {
-                    net.parametersOfPawn();
-                }
-            }, 1000);
+            if(this.currentColor != null)
+            {
+                net.parametersOfPawn();
+            }  
         }
+        }, 1000);
     }
     enemyMove(pawn)
     {
-        if(this.enemyPawn != pawn)
-        {
-            this.enemyPawn = pawn;
             console.log(JSON.parse(pawn));
             this.scene.children.forEach(element => {
                 if(element.geometry.type == "CylinderGeometry")
@@ -211,7 +210,5 @@ class Game{
                     }
                 }                
             });
-        }
-        
     }
 }

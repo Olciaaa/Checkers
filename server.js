@@ -78,6 +78,7 @@ function servResponse(req, res) {
             {
                 danePionka = [JSON.parse(finish.pawn),JSON.parse(finish.place)];
             }
+            res.end("haha")
         }
         else if(finish.action == "parameters")
         {

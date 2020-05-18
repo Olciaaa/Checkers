@@ -2,6 +2,7 @@ class Net{
     constructor(){
         console.log("net")
         this.waiting();
+        this.enemyPawn;
     }
 
     takeLogin(login)
@@ -75,7 +76,6 @@ class Net{
     }
     movedPawn(pawn,place)
     {
-        var pionek;
         //console.log(pawn);
         $.ajax({
             url: "/",
@@ -83,6 +83,7 @@ class Net{
             type: "POST",
             success: function (parameters) 
             {
+                console.log(parameters)
             },
             error: function (xhr, status, error) {
                 console.log(xhr);
@@ -96,15 +97,13 @@ class Net{
             url: "/",
             data: {action:"parameters"},//JSON.stringify(pawn.position)},
             type: "POST",
-            success: function (parameters) 
+            success: (parameters)=> 
             {
-                if(parameters != "null")
+                if(parameters != this.enemyPawn)
                 {
-                    //console.log(parameters)
+                    this.enemyPawn = parameters;
                     game.enemyMove(parameters);
                 }
-                
-                //game.enemyMove(JSON.parse(parameters));
             },
             error: function (xhr, status, error) {
                 console.log(xhr);
