@@ -73,20 +73,35 @@ class Net{
             },
         });
     }
-    parametersOfPawn(pawn)
+    movedPawn(pawn,place)
     {
         var pionek;
         //console.log(pawn);
         $.ajax({
             url: "/",
-            data: {action:"parameters",pawn:pawn},//JSON.stringify(pawn.position)},
+            data: {action:"movedPawn",pawn:JSON.stringify(pawn),place:JSON.stringify(place.position)},//JSON.stringify(pawn.position)},
             type: "POST",
             success: function (parameters) 
             {
-                if(pionek != parameters)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr);
+            },
+        });
+    }
+    parametersOfPawn()
+    {
+        //console.log(pawn);
+        $.ajax({
+            url: "/",
+            data: {action:"parameters"},//JSON.stringify(pawn.position)},
+            type: "POST",
+            success: function (parameters) 
+            {
+                if(parameters != "null")
                 {
-                    pionek = parameters;
-                    console.log(pionek);
+                    //console.log(parameters)
+                    game.enemyMove(parameters);
                 }
                 
                 //game.enemyMove(JSON.parse(parameters));

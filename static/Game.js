@@ -26,13 +26,11 @@ class Game{
         this.clickedBefore = 0;
         this.currentColor;
         this.enemyy = false;
-        this.enemyMove();
+        this.checkingEnemyMove();
     }
 
     makingBoard()
     {
-        //console.log(this.board)
-        //var scene = new THREE.Scene();
         let scene = this.scene;
         var axes = new THREE.AxesHelper(1000)
         scene.add(axes)
@@ -41,14 +39,10 @@ class Game{
         const bgTexture = loader.load('pictures/bcg2.jpg');
         scene.background = bgTexture;
 
-        //var renderer = new THREE.WebGLRenderer();
-        //renderer.setSize(window.innerWidth, window.innerHeight);
         $("#root").append( this.renderer.domElement );
 
         let camera = this.camera
         camera.position.set(0,100,160);
-        //camera.position.set(0,0,0);
-        //camera.position.y = 350;
         camera.lookAt(scene.position);
 
         var geometry = new THREE.BoxGeometry(this.sizeOfBlock, 5, this.sizeOfBlock);
@@ -142,6 +136,7 @@ class Game{
         makingPawns(enemyColor,(this.sizeOfBoard-2))
         this.movingPawn();
     }
+
     movingPawn()
     {
         var click = false;
@@ -149,20 +144,15 @@ class Game{
         var clickedElement;
         var camera = this.camera;
         var scene = this.scene;
-            //console.log(scene);
+
         var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
         var mouseVector = new THREE.Vector2() 
         $(document).mousedown( (event)=> {
-            if(this.currentColor == "white")
-            {
                 mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
                 mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
-                console.log(mouseVector)
-                console.log(event.clientX);
-                console.log(event.clientY);
                 raycaster.setFromCamera(mouseVector, camera);
                 var intersects = raycaster.intersectObjects(scene.children);
-                if (intersects.length >= 0) {
+                if (intersects.length > 0) {
                     clickedElement = intersects[0].object;
                     //console.log(clickedElement)
                     let arr = clickedElement.material.map.image.src.split("/")
@@ -175,70 +165,53 @@ class Game{
                              pawn.clicking(clickedElement,this.clickedBefore);
                              this.clickedBefore = clickedElement;
                              pawnn = clickedElement;
-                             console.log(pawnn.position.x / 100, pawnn.position.z/100)
+                             //console.log(pawnn.position.x / 100, pawnn.position.z/100)
                              click = true;
+                             //console.log(clickedElement.position);
                         }
                     }
     
                     if(click == true && clickedElement.geometry.type == "BoxGeometry" && (arr[arr.length-1]).split(".")[0] == "blackk")
                     {
+                        console.log(pawnn.position);
                         //console.log("git")
+                        pawn.sendingPar(pawnn.position,clickedElement);
                         pawn.moving(clickedElement);
                         pawn.clicking(pawnn,this.clickedBefore);
                     }
-                }
-            }
-
-                
-            
+                }     
         })
     } 
-    enemyMove()
+    checkingEnemyMove()
     {
         {
             setInterval(() => {
                 if(this.currentColor != null)
                 {
-                    net.parametersOfPawn(this.currentColor);
+                    net.parametersOfPawn();
                 }
-                
             }, 1000);
         }
-        //console.log(pawn);
-        //this.enemyy = true;
-        /*console.log(pawn.x / 100, pawn.z/100);
-        var clickedElement;
-        var camera = this.camera;
-        var scene = this.scene;
-        var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
-        var mouseVector = new THREE.Vector2() 
-
-            mouseVector.x = pawn.x / 100;
-            mouseVector.y = pawn.z/100;
-
-            raycaster.setFromCamera(mouseVector, camera);
-            var intersects = raycaster.intersectObjects(scene.children);
-            if (intersects.length >= 0) 
-            {
-                clickedElement = intersects[0].object;
-                console.log(clickedElement);    
-            }*/
     }
-    /*enemyGoes()
+    enemyMove(pawn)
     {
+        if(this.enemyPawn != pawn)
+        {
+            this.enemyPawn = pawn;
+            console.log(JSON.parse(pawn));
+            this.scene.children.forEach(element => {
+                if(element.geometry.type == "CylinderGeometry")
+                {
+                    //console.log(element.position);
+                    if(element.position.x == JSON.parse(pawn)[0].x && element.position.z == JSON.parse(pawn)[0].z)
+                    {
+                        console.log(element);
+                        element.position.x = JSON.parse(pawn)[1].x;
+                        element.position.z = JSON.parse(pawn)[1].z;
+                    }
+                }                
+            });
+        }
         
-        setInterval(()=>
-        { 
-            console.log(this.currentColor)
-            console.log("działa");
-            console.log(this.enemyy);
-            
-            if(this.enemyy == true && this.currentColor == "black")
-            {
-                console.log("czarny");
-                this.enemyy = false;
-            } 
-        }, 1000);
-         
-    }*/
+    }
 }

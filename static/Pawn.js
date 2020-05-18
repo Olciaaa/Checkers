@@ -3,14 +3,13 @@ class Pawn{
         //console.log("sztos");
         this.pawnn = 0;
         this.place = 0;
+        this.enemyPawn;
         //this.sendingPar();
     }
     clicking(pawn,a)
     {
         this.pawnn = pawn;
-        //console.log(pawn);
-        //console.log(a);
-        //pawn.position.z = pawn.position.z - 20;
+
         function render() {
             if(a != pawn)
             {
@@ -20,8 +19,6 @@ class Pawn{
                 }
                 pawn.rotation.y += 0.03;
             }
-            
-            
                 
             requestAnimationFrame(render);
 
@@ -35,12 +32,10 @@ class Pawn{
         this.place = place;
         this.pawnn.position.z = place.position.z;
         this.pawnn.position.x = place.position.x;
-        
     }
-    /*sendingPar()
+    sendingPar(pawn,place)
     {
-        setInterval(() => {
-            net.parametersOfPawn(this.pawnn,this.place);
-        }, 1000);
-    }*/
+        net.movedPawn(pawn,place);
+        console.log(pawn);
+    }
 }

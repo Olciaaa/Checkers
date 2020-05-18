@@ -5,7 +5,7 @@ var qs = require("querystring");
 var gracze = [];
 var color;
 
-var danePionka = [1];
+var danePionka = null;
 
 function servResponse(req, res) {
     var allData = "";
@@ -72,20 +72,15 @@ function servResponse(req, res) {
             gracze = [];
             res.end("Nie ma teraz żadnych graczy, możesz dołączyć do gry");
         }
+        else if(finish.action == "movedPawn")
+        {
+            if(danePionka != JSON.parse(finish.pawn))
+            {
+                danePionka = [JSON.parse(finish.pawn),JSON.parse(finish.place)];
+            }
+        }
         else if(finish.action == "parameters")
         {
-            var check = true;
-            
-            danePionka.forEach(element => {
-                if(element == finish.pawn)
-                {
-                    check = false;
-                }
-            });
-            if(check == true)
-            {
-                danePionka.push(finish.pawn);
-            }
             //console.log(finish);
             res.end(JSON.stringify(danePionka));
         }
