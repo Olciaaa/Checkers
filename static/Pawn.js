@@ -20,7 +20,6 @@ class Pawn{
             map: new THREE.TextureLoader().load('pictures/'+ game.currentColor +'.jpg') ,
             transparent: true, 
             opacity: 0.8,
-            
             })
         if(a != 0)
         {
@@ -66,7 +65,7 @@ class Pawn{
                     if(Math.abs(pawn.position.x - element.position.x) == 20 && Math.abs(pawn.position.z - element.position.z) == 20  &&  Math.abs(pawn.position.z) > Math.abs(element.position.z))
                     {
                         //element.material = newMaterial;
-                        //console.log(element.material)
+                        console.log(element)
                     }
                 }
         });
