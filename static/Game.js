@@ -85,6 +85,9 @@ class Game{
         //console.log(scene);
         function render() 
         {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
             requestAnimationFrame(render);
             renderer.render(scene, camera);
         }
@@ -167,7 +170,7 @@ class Game{
 
                         if(this.currentColor == (arr[arr.length-1]).split(".")[0])
                         {
-                            console.log(clickedElement.material.map.image)
+                            //console.log(clickedElement.material.map.image)
                             if(clickedElement.geometry.type == "CylinderGeometry")
                             {
                                 pawn.clicking(clickedElement,this.clickedBefore);
@@ -179,6 +182,7 @@ class Game{
                         
                         if(click == true && clickedElement.geometry.type == "BoxGeometry")
                         {
+                            //console.log(clickedElement.material.map.image)
                             let arr = clickedElement.material.map.image.src.split("/")
                             if((arr[arr.length-1]).split(".")[0] == "blackk" && Math.abs(pawnn.position.x - clickedElement.position.x) == 20 && Math.abs(pawnn.position.z - clickedElement.position.z) == 20 && Math.abs(pawnn.position.z) > Math.abs(clickedElement.position.z))
                             {

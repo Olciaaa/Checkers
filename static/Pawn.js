@@ -26,12 +26,30 @@ class Pawn{
         {
            // a.material = mater;
         }
+
         this.pawnn = pawn;
+        //console.log(pawn);
+        //console.log(a);
+        //pawn.position.z = pawn.position.z - 20;
+        function render() {
+            if(a != pawn)
+            {
+                if(a != 0)
+                {
+                    a.rotation.y -= 0.03;
+                }
+                pawn.rotation.y += 0.03;
+            }   
+            requestAnimationFrame(render);
+
+        }
+        render();
        // pawn.material =  newMaterial;
         
         game.scene.children.forEach(element => {
             if(element.geometry.type == "BoxGeometry")
                 {
+                    //console.log(element.material.map.image)
                     let arr = element.material.map.image.src.split("/")
                     if((arr[arr.length-1]).split(".")[0] == "bcg")
                     {
@@ -42,11 +60,13 @@ class Pawn{
                                 opacity: 0.8,
                                 })
                             //console.log(element.material);
-                           // element.material = mat;
+                            //element.material = mat;
+                            //element.material.map.image.src = 'pictures/blackk.jpg'
                     }
                     if(Math.abs(pawn.position.x - element.position.x) == 20 && Math.abs(pawn.position.z - element.position.z) == 20  &&  Math.abs(pawn.position.z) > Math.abs(element.position.z))
                     {
                         //element.material = newMaterial;
+                        //console.log(element.material)
                     }
                 }
         });
