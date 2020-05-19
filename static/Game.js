@@ -25,8 +25,10 @@ class Game{
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.clickedBefore = 0;
         this.currentColor;
+        this.status = false;
         this.enemyy = false;
         this.checkingEnemyMove();
+        
     }
 
     makingBoard()
@@ -134,11 +136,12 @@ class Game{
         }
         makingPawns(playerColor,0)
         makingPawns(enemyColor,(this.sizeOfBoard-2))
-        this.movingPawn();
+        //this.movingPawn();
     }
 
-    movingPawn()
+    movingPawn(colorrr)
     {
+        this.status = true;
         var click = false;
         var pawnn;
         var clickedElement;
@@ -148,67 +151,79 @@ class Game{
         var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
         var mouseVector = new THREE.Vector2() 
         $(document).mousedown( (event)=> {
-            if(this.currentColor == "white")
+            if(this.status == true)
             {
-                mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
-                mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
-                raycaster.setFromCamera(mouseVector, camera);
-                var intersects = raycaster.intersectObjects(scene.children);
-                if (intersects.length > 0) {
-                    clickedElement = intersects[0].object;
+               // console.log(colorrr);
+                if(this.currentColor == colorrr);
+                {
+                    mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
+                    mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
+                    raycaster.setFromCamera(mouseVector, camera);
+                    var intersects = raycaster.intersectObjects(scene.children);
+                    if (intersects.length > 0) {
+                        clickedElement = intersects[0].object;
 
-                    let arr = clickedElement.material.map.image.src.split("/")
+                        let arr = clickedElement.material.map.image.src.split("/")
 
-                    if(this.currentColor == (arr[arr.length-1]).split(".")[0])
-                    {
-                        if(clickedElement.geometry.type == "CylinderGeometry")
+                        if(this.currentColor == (arr[arr.length-1]).split(".")[0])
                         {
-                             pawn.clicking(clickedElement,this.clickedBefore);
-                             this.clickedBefore = clickedElement;
-                             pawnn = clickedElement;
-                             click = true;
+                            console.log(clickedElement.material.map.image)
+                            if(clickedElement.geometry.type == "CylinderGeometry")
+                            {
+                                pawn.clicking(clickedElement,this.clickedBefore);
+                                this.clickedBefore = clickedElement;
+                                pawnn = clickedElement;
+                                click = true;
+                            }
                         }
-                    }
-    
-                    if(click == true && clickedElement.geometry.type == "BoxGeometry" && (arr[arr.length-1]).split(".")[0] == "blackk")
-                    {
-                        console.log(pawnn.position);
-                        //console.log("git")
-                        pawn.sendingPar(pawnn.position,clickedElement);
-                        pawn.moving(clickedElement);
-                        pawn.clicking(pawnn,this.clickedBefore);
-                    }
-                }   
-            }  
+                        
+                        if(click == true && clickedElement.geometry.type == "BoxGeometry")
+                        {
+                            let arr = clickedElement.material.map.image.src.split("/")
+                            if((arr[arr.length-1]).split(".")[0] == "blackk" && Math.abs(pawnn.position.x - clickedElement.position.x) == 20 && Math.abs(pawnn.position.z - clickedElement.position.z) == 20 && Math.abs(pawnn.position.z) > Math.abs(clickedElement.position.z))
+                            {
+                                //console.log(pawnn.position, clickedElement.position)
+                                //console.log("może");
+                                pawn.sendingPar(pawnn.position,clickedElement);
+                                pawn.moving(clickedElement);
+                                //pawn.clicking(pawnn);
+                                this.status = false;
+                                click = false;
+                            }
+                            
+                        }
+                    }   
+                }  
+            }
         })
     } 
     checkingEnemyMove()
     {
         setInterval(() => {
-        //console.log(this.currentColor)
-        if(this.currentColor == "black")
-        {
             if(this.currentColor != null)
             {
                 net.parametersOfPawn();
             }  
-        }
         }, 1000);
     }
     enemyMove(pawn)
     {
-            console.log(JSON.parse(pawn));
-            this.scene.children.forEach(element => {
-                if(element.geometry.type == "CylinderGeometry")
-                {
-                    //console.log(element.position);
-                    if(element.position.x == JSON.parse(pawn)[0].x && element.position.z == JSON.parse(pawn)[0].z)
+           // console.log(JSON.parse(pawn));
+            if(JSON.parse(pawn) != null)
+            {
+                this.scene.children.forEach(element => {
+                    if(element.geometry.type == "CylinderGeometry")
                     {
-                        console.log(element);
-                        element.position.x = JSON.parse(pawn)[1].x;
-                        element.position.z = JSON.parse(pawn)[1].z;
-                    }
-                }                
-            });
+                        //console.log(element.position);
+                        if(element.position.x == JSON.parse(pawn)[0].x && element.position.z == JSON.parse(pawn)[0].z)
+                        {
+                            //console.log(element);
+                            element.position.x = JSON.parse(pawn)[1].x;
+                            element.position.z = JSON.parse(pawn)[1].z;
+                        }
+                    }                
+                });
+
+            }
     }
 }

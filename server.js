@@ -4,6 +4,9 @@ var qs = require("querystring");
 
 var gracze = [];
 var color;
+var currentColor = "white";
+var i = 0;
+var zmiana = false;
 
 var danePionka = null;
 
@@ -79,11 +82,24 @@ function servResponse(req, res) {
                 danePionka = [JSON.parse(finish.pawn),JSON.parse(finish.place)];
             }
             res.end("haha")
+            zmiana = true;
         }
         else if(finish.action == "parameters")
         {
             //console.log(finish);
             res.end(JSON.stringify(danePionka));
+        }
+        else if(finish.action == "time")
+        {
+            if(gracze.length == 2)
+            {
+                res.end("true");
+            }
+            else
+            {
+                res.end("false");
+            }
+            /**/
         }
     })
 }

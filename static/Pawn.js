@@ -8,34 +8,83 @@ class Pawn{
     }
     clicking(pawn,a)
     {
-        this.pawnn = pawn;
-
-        function render() {
-            if(a != pawn)
-            {
-                if(a != 0)
-                {
-                    a.rotation.y -= 0.03;
-                }
-                pawn.rotation.y += 0.03;
-            }
-                
-            requestAnimationFrame(render);
-
+        var newMaterial = new THREE.MeshBasicMaterial({ 
+            side: THREE.DoubleSide, 
+            map: new THREE.TextureLoader().load('pictures/bcg.jpg') ,
+            transparent: true, 
+            opacity: 0.8,
+            
+            })
+        var mater = new THREE.MeshBasicMaterial({ 
+            side: THREE.DoubleSide, 
+            map: new THREE.TextureLoader().load('pictures/'+ game.currentColor +'.jpg') ,
+            transparent: true, 
+            opacity: 0.8,
+            
+            })
+        if(a != 0)
+        {
+           // a.material = mater;
         }
-        render();
+        this.pawnn = pawn;
+       // pawn.material =  newMaterial;
+        
+        game.scene.children.forEach(element => {
+            if(element.geometry.type == "BoxGeometry")
+                {
+                    let arr = element.material.map.image.src.split("/")
+                    if((arr[arr.length-1]).split(".")[0] == "bcg")
+                    {
+                            var mat = new THREE.MeshBasicMaterial({ 
+                                side: THREE.DoubleSide, 
+                                map: new THREE.TextureLoader().load('pictures/blackk.jpg') ,
+                                transparent: true, 
+                                opacity: 0.8,
+                                })
+                            //console.log(element.material);
+                           // element.material = mat;
+                    }
+                    if(Math.abs(pawn.position.x - element.position.x) == 20 && Math.abs(pawn.position.z - element.position.z) == 20  &&  Math.abs(pawn.position.z) > Math.abs(element.position.z))
+                    {
+                        //element.material = newMaterial;
+                    }
+                }
+        });
     }
     moving(place)
     {
-        //console.log(place.position)
-        //console.log(this.pawnn)
+        var mat = new THREE.MeshBasicMaterial({ 
+            side: THREE.DoubleSide, 
+            map: new THREE.TextureLoader().load('pictures/'+ game.currentColor+'.jpg') ,
+            transparent: true, 
+            opacity: 0.8,
+            })
+      //  this.pawnn.material = mat;
         this.place = place;
         this.pawnn.position.z = place.position.z;
         this.pawnn.position.x = place.position.x;
+        game.scene.children.forEach(element => {
+            if(element.geometry.type == "BoxGeometry")
+                {
+                    let arr = element.material.map.image.src.split("/")
+                    if((arr[arr.length-1]).split(".")[0] == "bcg")
+                    {
+                        var newMaterial = new THREE.MeshBasicMaterial({ 
+                            side: THREE.DoubleSide, 
+                            map: new THREE.TextureLoader().load('pictures/blackk.jpg') ,
+                            transparent: true, 
+                            opacity: 0.8,
+                            
+                            })
+                        //console.log(element.material);
+                        //element.material = newMaterial;
+                    }
+                }
+        });
     }
     sendingPar(pawn,place)
     {
         net.movedPawn(pawn,place);
-        console.log(pawn);
+        //console.log(pawn);
     }
 }

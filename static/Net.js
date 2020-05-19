@@ -3,6 +3,10 @@ class Net{
         console.log("net")
         this.waiting();
         this.enemyPawn;
+        this.start = false;
+        this.actualColor;
+        this.movedEnemyy = false;
+        this.timeTicking();
     }
 
     takeLogin(login)
@@ -103,11 +107,105 @@ class Net{
                 {
                     this.enemyPawn = parameters;
                     game.enemyMove(parameters);
+                    
+                    if(parameters != "null")
+                    {
+                        //console.log(parameters)
+                        this.movedEnemyy = true;
+                    }
                 }
             },
             error: function (xhr, status, error) {
                 console.log(xhr);
             },
         });
+    }
+    timeTicking()
+    {
+        let i = 0;
+        let start = "false";
+        let playingColor = "white";
+        setInterval(() => {
+            //console.log(game.currentColor);
+            if(i == 0)
+            {
+               $.ajax({
+                    url: "/",
+                    data: {action:"time"},
+                    type: "POST",
+                    success: function (status) 
+                    {
+                        //console.log(status);
+                        if(start == "false")
+                        {
+                            start = status;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr);
+                    },
+                });
+            }
+            if(start == "true")
+            {
+                if(this.movedEnemyy == true)
+                {
+                    i = 0;
+                    if(playingColor == "white")
+                        {
+                            playingColor = "black";
+                        }
+                        else{
+                            playingColor = "white";
+                        }
+                    this.movedEnemyy = false;
+                }
+
+                if(this.movedEnemyy == true)
+                {
+                   // console.log(this.movedEnemyy)
+                    this.movedEnemyy = false;
+                }
+                
+                //console.log(i)
+                if(i == 0)
+                {
+                    if(playingColor == game.currentColor)
+                    {
+                        //console.log(playingColor);
+                        this.actualColor = playingColor;
+                        //console.log(this.actualColor)
+                        game.movingPawn(this.actualColor);
+                        $("#dontMove").remove();
+                    }
+                    else
+                    {
+                        game.status = false;
+                        var div = $("<div>").attr("id", "dontMove").text("Przycisk");
+                        $("main").append(div);
+                    }
+                }
+                    if(i <= 10)
+                    {
+                        $("#time").text( i + " s");
+                        i++
+                    }
+                    else
+                    {
+                        i = 0;
+                        if(playingColor == "white")
+                        {
+                            playingColor = "black";
+                        }
+                        else{
+                            playingColor = "white";
+                        }
+                        //console.log(playingColor)
+                    }
+                
+            }
+            
+        }, 1000);
+        
     }
 }
